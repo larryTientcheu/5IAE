@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot avec Flask</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body style="background-color :darkgray;">
+    <div class="container-fluid h-100">
+        <div class="row h-100">
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar" style="position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            background-color :black;
+            width: 250px; /* Largeur de la barre latérale */
+            padding-top: 20px;
+            overflow-y: auto; /* Ajouter un défilement si nécessaire */
+            border-right: 1px solid #ffffff; /* Ajout d'une bordure blanche à droite */">
+                <div class="sidebar-sticky">
+                    <h5 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                        <span>Prompts</span>
+                    </h5>
+                    <ul class="nav flex-column text-white" id="chat-prompts">
+                        <!-- Les messages du chatbot apparaîtront ici -->
+                    </ul>
+                </div>
+            </nav>
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 d-flex flex-column main-content">
+                <div class="chat-container flex-grow-1">
+                    <div id="chat-window" class="chat-window">
+                        <!-- Les échanges du chat apparaîtront ici -->
+                    </div>
+                </div>
+                <div class="fixed-bottom d-flex justify-content-center mb-3">
+                    <form id="chat-form" class="input-group w-50">
+                        <input type="text" id="user-input" class="form-control rounded-pill" placeholder="Tapez votre message ici...">
+                        <div class="input-group-append">
+                            <button class="btn btn-dark rounded-pill" type="submit">
+                                <i class="fas fa-paper-plane"></i> <!-- Icône d'envoi -->
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+</body>
+</html>
