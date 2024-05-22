@@ -1,0 +1,5 @@
+pandas
+numpy
+
+# For linux to use GPU only
+tensorflow[and-cuda]
