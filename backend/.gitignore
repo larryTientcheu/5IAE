@@ -1,0 +1,8 @@
+.vscode/
+.venv*/
+venv*/
+__pycache__/
+.env/
+dist/
+docs/_build/
+.coverage*
