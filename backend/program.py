@@ -72,11 +72,24 @@ def add_chat():
                 }
             )
         except Exception as e:
-            print(e)
+            # print(e)
             db.session.rollback()
             return abort(500)
         finally:
             db.session.close()
+
+
+@app.route("/chat/<int:del_id>", methods=["DELETE"])
+def remove_chat(del_id):
+    try:
+        Prompts.query.filter_by(id=del_id).delete()
+        db.session.commit()
+        return jsonify({"success": True})
+    except Exception as e:
+        db.session.rollback()
+        return abort(404)
+    finally:
+        db.session.close()
 
 
 if __name__ == "__main__":
