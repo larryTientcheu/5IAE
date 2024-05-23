@@ -2,7 +2,7 @@ from pathlib import Path
 import joblib
 from joblib import Memory
 import pandas as pd
-import time
+# import time
 
 memory = Memory(Path(__file__).parent / ".cachedir", verbose=0)
 
@@ -59,9 +59,9 @@ def make_prediction(inputs):
 # Helper Test function
 # data = {
 #     "AIRLINE": "AS",
-#     "SCHEDULED_DEPARTURE": "2023-12-28 06:23:00",
-#     "ORIGIN_AIRPORT": "MIA",
-#     "DESTINATION_AIRPORT": "JFK",
+#     "SCHEDULED_DEPARTURE": "2024-12-28 06:23:00",
+#     "ORIGIN_AIRPORT": "HOU",
+#     "DESTINATION_AIRPORT": "BOS",
 # }
 # start = time.time()
 # price = make_prediction(data)
