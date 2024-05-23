@@ -1,0 +1,24 @@
+# Utilisez une image de base Python
+FROM python:3.9-slim
+
+# Définissez le répertoire de travail dans le conteneur
+WORKDIR /app
+
+# Copiez le fichier requirements.txt dans le conteneur
+COPY requirements.txt requirements.txt
+
+# Installez les dépendances
+RUN pip install -r requirements.txt
+
+# Copiez le contenu du répertoire actuel dans le conteneur
+COPY . .
+
+# Définissez la variable d'environnement pour Flask
+ENV FLASK_APP=app.py
+ENV FLASK_RUN_HOST=0.0.0.0
+
+# Exposez le port sur lequel l'application va tourner
+EXPOSE 5000
+
+# Commande pour lancer l'application Flask
+CMD ["flask", "run"]
