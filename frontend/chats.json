@@ -1,0 +1,74 @@
+{
+    "chats": [
+        {
+            "tag": "debut",
+            "prompt": "Quel est le prix d'un vol de Los Angeles à New York ?",
+            "response": "Pour vous donner une estimation précise du prix, j'aurai besoin de quelques informations supplémentaires:",
+            "context_set": {}
+        },
+        {
+            "tag": "compagnie",
+            "prompt": "Je voudrais voyager avec United Airlines.",
+            "response": "Très bien, nous allons considérer United Airlines. Quelle est la date de départ prévue ?",
+            "context_set": {
+                "airline": "UA"
+            }
+        },
+        {
+            "tag": "compagnie",
+            "prompt": "Je voudrais voyager avec Delta Airlines.",
+            "response": "D'accord, nous allons considérer Delta Airlines. Quelle est la date de départ prévue ?",
+            "context_set": {
+                "airline": "DL"
+            }
+        },
+        {
+            "tag": "compagnie",
+            "prompt": "Je voudrais voyager avec American Airlines.",
+            "response": "D'accord, nous allons considérer American Airlines. Quelle est la date de départ prévue ?",
+            "context_set": {
+                "airline": "AA"
+            }
+        },
+        {
+            "tag": "départ",
+            "prompt": "Je souhaiterais partir le 2024-07-15 à 09:30:00",
+            "response": "D'accord, je note un départ le 15 juillet 2024 à 9h30. Quel est l'aéroport de départ ?",
+            "context_set": {
+                "scheduled_departure": "2024-07-15 09:30:00"
+            }
+        },
+        {
+            "tag": "départ",
+            "prompt": "Je souhaiterais partir le 2024-12-20 à 14:00:00",
+            "response": "D'accord, je note un départ le 20 décembre 2024 à 14h00. Quel est l'aéroport de départ ?",
+            "context_set": {
+                "scheduled_departure": "2024-12-20 14:00:00"
+            }
+        },
+        {
+            "tag": "aéroport_origine",
+            "prompt": "Je partirai de l'aéroport LAX de Los Angeles.",
+            "response": "Parfait, l'aéroport d'origine est LAX. Et l'aéroport de destination ?",
+            "context_set": {
+                "origin_airport": "LAX"
+            }
+        },
+        {
+            "tag": "aéroport_destination",
+            "prompt": "Je veux aller à l'aéroport JFK de New York.",
+            "response": "Très bien, j'ai tous les éléments pour estimer le prix de votre vol. Laissez-moi quelques instants pour calculer une estimation...",
+            "context_set": {
+                "destination_airport": "JFK"
+            }
+        },
+        {
+            "tag": "aéroport_destination",
+            "prompt": "Je veux aller à l'aéroport SFO de San Francisco.",
+            "response": "Très bien, j'ai tous les éléments pour estimer le prix de votre vol. Laissez-moi quelques instants pour calculer une estimation...",
+            "context_set": {
+                "destination_airport": "SFO"
+            }
+        }
+    ]
+}

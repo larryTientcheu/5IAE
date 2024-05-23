@@ -8,18 +8,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
-<body style="background-color :darkgray;">
+<body style="background-color: darkgray;">
     <div class="container-fluid h-100">
         <div class="row h-100">
-            <nav class="col-md-3 col-lg-2 d-md-block sidebar" style="position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            background-color :black;
-            width: 250px; /* Largeur de la barre latérale */
-            padding-top: 20px;
-            overflow-y: auto; /* Ajouter un défilement si nécessaire */
-            border-right: 1px solid #ffffff; /* Ajout d'une bordure blanche à droite */">
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar" style="position: fixed; top: 0; bottom: 0; left: 0; background-color: black; width: 250px; padding-top: 20px; overflow-y: auto; border-right: 1px solid #ffffff;">
                 <div class="sidebar-sticky">
                     <h5 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
                         <span>Prompts</span>
@@ -40,7 +32,7 @@
                         <input type="text" id="user-input" class="form-control rounded-pill" placeholder="Tapez votre message ici...">
                         <div class="input-group-append">
                             <button class="btn btn-dark rounded-pill" type="submit">
-                                <i class="fas fa-paper-plane"></i> <!-- Icône d'envoi -->
+                                <i class="fas fa-paper-plane"></i>
                             </button>
                         </div>
                     </form>
