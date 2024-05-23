@@ -1,5 +1,13 @@
+# API Execution
 flask
 pandas
 psycopg2
 flask_sqlalchemy
-guicorn
+flask_migrate
+
+#ai model
+scikit-learn
+scipy
+seaborn
+# Tensorflow with cuda support.
+tensorflow

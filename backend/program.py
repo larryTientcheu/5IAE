@@ -2,12 +2,11 @@ from datetime import datetime
 import config
 from flask import Flask, request, jsonify, abort
 from flask_migrate import Migrate
+import json
 from models import db, Prompts
 import src.funcs as helper_functions
 
-from ..ai_model.helpers import helpers as ai_helpers
-
-# import ai_model.helpers.helpers as ai_helpers
+import ai_model.helpers.helpers as ai_helpers
 
 app = Flask(__name__)
 app.config.from_object("config")
@@ -24,6 +23,9 @@ migrate = Migrate(app, db)
 @app.route("/chats", methods=["GET"])
 def chat():
     prompts = Prompts.query.all()
+    if not prompts:
+        abort(404)
+    prompts = [prompt.format() for prompt in prompts]
     return jsonify({"success": True, "prompts": prompts})
 
 
@@ -63,10 +65,14 @@ def add_chat():
             new_chat.insert()
             db.session.commit()
             return jsonify(
-                {"success": True, "result": price, "prompt": new_chat.format()}
+                {
+                    "success": True,
+                    "price": str(price),
+                    "prompt": new_chat.format(),
+                }
             )
         except Exception as e:
-            # print(e)
+            print(e)
             db.session.rollback()
             return abort(500)
         finally:
