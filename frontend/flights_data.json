@@ -1,0 +1,9 @@
+[
+    {
+        "compagnie": "Delta Air Lines",
+        "date_depart": "2024-03-08",
+        "heure_depart": "12:15",
+        "origine": "Los Angeles",
+        "destination": "New York"
+    }
+]
