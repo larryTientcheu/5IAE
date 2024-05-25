@@ -7,10 +7,8 @@ $(document).ready(function() {
         'Pouvez-vous me donner la compagnie aérienne ?',
         'Quelle est la date de départ (YYYY-MM-DD) ?',
         'Quelle est l\'heure de départ (HH:MM) ?',
-        'Quel est le nom de l\'aéroport d\'origine ?',
-        'Quelle est la ville d\'origine ?',
-        'Quel est le nom de l\'aéroport de destination ?',
-        'Quelle est la ville de destination ?'
+        'Quel est le nom de l\'aéroport ou la ville d\'origine ?',
+        'Quel est le nom de l\'aéroport ou la ville de destination ?'
     ];
 
     const fields = [
@@ -18,10 +16,8 @@ $(document).ready(function() {
         'compagnie',
         'date_depart',
         'heure_depart',
-        'aeroport_origine',
-        'ville_origine',
-        'aeroport_destination',
-        'ville_destination'
+        'origine',
+        'destination'
     ];
 
     function askQuestion() {

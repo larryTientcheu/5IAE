@@ -37,10 +37,10 @@ def validate_answer_route():
 
     if "compagnie" in question.lower() and answer not in valid_companies:
         return jsonify({'valid': False, 'error': 'Cette compagnie n\'existe pas, veuillez entrer une autre compagnie.'})
-    elif "aéroport" in question.lower() and answer not in valid_airports:
-        return jsonify({'valid': False, 'error': 'Cet aéroport n\'existe pas, veuillez entrer un autre aéroport.'})
-    elif "ville" in question.lower() and answer not in valid_cities:
-        return jsonify({'valid': False, 'error': 'Cette ville n\'existe pas, veuillez entrer une autre ville.'})
+    elif "aéroport ou la ville d'origine" in question.lower() and answer not in valid_airports and answer not in valid_cities:
+        return jsonify({'valid': False, 'error': 'Cet aéroport ou cette ville n\'existe pas, veuillez entrer un autre nom.'})
+    elif "aéroport ou la ville de destination" in question.lower() and answer not in valid_airports and answer not in valid_cities:
+        return jsonify({'valid': False, 'error': 'Cet aéroport ou cette ville n\'existe pas, veuillez entrer un autre nom.'})
     
     valid = validate_answer(question, answer)
     return jsonify({'valid': valid})
