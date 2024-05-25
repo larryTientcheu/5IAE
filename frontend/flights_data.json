@@ -1,0 +1,11 @@
+[
+    {
+        "compagnie": "Lufthansa",
+        "date_depart": "2022-05-05",
+        "heure_depart": "8",
+        "aeroport_origine": "Rafael Hernandez",
+        "ville_origine": "Aguadilla",
+        "aeroport_destination": "John Murtha Johnstown-Cambria County",
+        "ville_destination": "Ashland"
+    }
+]

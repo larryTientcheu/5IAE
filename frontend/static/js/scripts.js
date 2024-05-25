@@ -1,22 +1,111 @@
 $(document).ready(function() {
-    $('#chat-form').on('submit', function(e) {
-        e.preventDefault();
-        var userQuestion = $('#user-input').val();
-        $('#chat-window').append('<p><strong>Utilisateur:</strong> ' + userQuestion + '</p>');
-        
+    let flightInfo = {};
+    let currentQuestion = 0;
+
+    const questions = [
+        'D\'accord, pour accéder à votre requête, j\'aurai besoin de plusieurs informations.',
+        'Pouvez-vous me donner la compagnie aérienne ?',
+        'Quelle est la date de départ (YYYY-MM-DD) ?',
+        'Quelle est l\'heure de départ (HH:MM) ?',
+        'Quel est le nom de l\'aéroport d\'origine ?',
+        'Quelle est la ville d\'origine ?',
+        'Quel est le nom de l\'aéroport de destination ?',
+        'Quelle est la ville de destination ?'
+    ];
+
+    const fields = [
+        null,
+        'compagnie',
+        'date_depart',
+        'heure_depart',
+        'aeroport_origine',
+        'ville_origine',
+        'aeroport_destination',
+        'ville_destination'
+    ];
+
+    function askQuestion() {
+        if (currentQuestion < questions.length) {
+            $('#chat-window').append('<p><strong>Bot:</strong> ' + questions[currentQuestion] + '</p>');
+            if (currentQuestion > 0) {
+                $('#chat-form').data('field', fields[currentQuestion]);
+            }
+        } else {
+            saveFlightInfo();
+        }
+    }
+
+    function validateAnswerWithAI(question, answer, callback) {
         $.ajax({
             type: 'POST',
             contentType: 'application/json',
-            url: '/get_response',
-            data: JSON.stringify({ question: userQuestion }),
+            url: '/validate_answer',
+            data: JSON.stringify({ question: question, answer: answer }),
             success: function(response) {
-                $('#chat-window').append('<p><strong>Chatbot:</strong> ' + response.response + '</p>');
-                $('#user-input').val('');
-                $('#chat-window').scrollTop($('#chat-window')[0].scrollHeight);
+                callback(response.valid, response.error);
+            },
+            error: function(xhr, status, error) {
+                console.error('Erreur lors de la requête:', error);
+                callback(false, 'Erreur lors de la requête.');
+            }
+        });
+    }
+
+    function saveFlightInfo() {
+        $.ajax({
+            type: 'POST',
+            contentType: 'application/json',
+            url: '/save_flight_info',
+            data: JSON.stringify(flightInfo),
+            success: function(response) {
+                $('#chat-window').append('<p><strong>Bot:</strong> ' + response.message + '</p>');
             },
             error: function(xhr, status, error) {
                 console.error('Erreur lors de la requête:', error);
             }
         });
+    }
+
+    $('#chat-form').on('submit', function(e) {
+        e.preventDefault();
+        let userAnswer = $('#user-input').val().trim();
+        let field = $('#chat-form').data('field');
+
+        if (currentQuestion > 0) {
+            validateAnswerWithAI(questions[currentQuestion], userAnswer, function(isValid, error) {
+                if (!isValid) {
+                    $('#chat-window').append('<p><strong>Bot:</strong> ' + (error || 'Réponse invalide. Veuillez réessayer.') + '</p>');
+                    $('#user-input').val('');
+                    return;
+                }
+
+                flightInfo[field] = userAnswer;
+                $('#chat-window').append('<p><strong>Utilisateur:</strong> ' + userAnswer + '</p>');
+                $('#user-input').val('');
+
+                currentQuestion++;
+                askQuestion();
+            });
+        } else {
+            $('#chat-window').append('<p><strong>Utilisateur:</strong> ' + userAnswer + '</p>');
+            $('#user-input').val('');
+            currentQuestion++;
+            askQuestion();
+        }
+
+        $('#chat-window').scrollTop($('#chat-window')[0].scrollHeight);
+    });
+
+    // Initialiser la conversation
+    $('#chat-window').append('<p><strong>Bot:</strong> Comment puis-je vous aider aujourd\'hui ?</p>');
+    $('#chat-form').data('field', null);
+
+    // Ajouter un écouteur d'événement pour la première entrée utilisateur
+    $('#chat-form').one('submit', function(e) {
+        e.preventDefault();
+        let userRequest = $('#user-input').val().trim();
+        $('#chat-window').append('<p><strong>Utilisateur:</strong> ' + userRequest + '</p>');
+        $('#user-input').val('');
+        askQuestion();
     });
 });

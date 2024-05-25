@@ -1,59 +1,72 @@
 from flask import Flask, render_template, request, jsonify
-import json
 from transformers import BertTokenizer, TFBertForSequenceClassification
 import tensorflow as tf
+import json
+import numpy as np
+import os
 
 app = Flask(__name__)
 
-# Charger les données du fichier JSON
-with open('chats.json', 'r') as f:
-    data = json.load(f)
-chats = data['chats']
+# Charger le modèle BERT pour la validation des réponses
+model_save_path = './saved_model/'  # spécifiez le même chemin que celui utilisé pour la sauvegarde
+tokenizer = BertTokenizer.from_pretrained(model_save_path)
+model = TFBertForSequenceClassification.from_pretrained(model_save_path)
 
-# Charger le tokenizer et le modèle BERT pré-entraîné
-tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-model = TFBertForSequenceClassification.from_pretrained('bert-base-uncased', num_labels=len(chats))
+# Charger les données du fichier JSON pour la validation
+with open('larger_flight_data.json', 'r') as f:
+    flights_data = json.load(f)
 
-# Préparer les données d'entraînement
-questions = [chat['prompt'] for chat in chats]
-responses = [chat['response'] for chat in chats]
+# Extraire les listes valides de compagnies, aéroports et villes
+valid_companies = set(row['compagnie'] for row in flights_data)
+valid_airports = set(row['aeroport_origine'] for row in flights_data) | set(row['aeroport_destination'] for row in flights_data)
+valid_cities = set(row['ville_origine'] for row in flights_data) | set(row['ville_destination'] for row in flights_data)
 
-train_encodings = tokenizer(questions, truncation=True, padding=True)
-train_labels = tf.convert_to_tensor([i for i in range(len(chats))])
+# Fonction pour valider les réponses en utilisant le modèle entraîné
+def validate_answer(question, answer):
+    inputs = tokenizer(question, answer, return_tensors='tf', truncation=True, padding=True)
+    outputs = model(inputs)
+    prediction = tf.argmax(outputs.logits, axis=-1).numpy()[0]
+    return bool(prediction)
 
-# Convertir les données en format TensorFlow Dataset
-train_dataset = tf.data.Dataset.from_tensor_slices((
-    dict(train_encodings),
-    train_labels
-))
+# Route pour la validation des réponses
+@app.route('/validate_answer', methods=['POST'])
+def validate_answer_route():
+    data = request.json
+    question = data['question']
+    answer = data['answer']
 
-# Compiler le modèle
-optimizer = tf.keras.optimizers.Adam(learning_rate=5e-5)
-loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
-model.compile(optimizer=optimizer, loss=loss, metrics=['accuracy'])
-
-# Entraîner le modèle
-model.fit(train_dataset.shuffle(1000).batch(8), epochs=50, batch_size=20)
+    if "compagnie" in question.lower() and answer not in valid_companies:
+        return jsonify({'valid': False, 'error': 'Cette compagnie n\'existe pas, veuillez entrer une autre compagnie.'})
+    elif "aéroport" in question.lower() and answer not in valid_airports:
+        return jsonify({'valid': False, 'error': 'Cet aéroport n\'existe pas, veuillez entrer un autre aéroport.'})
+    elif "ville" in question.lower() and answer not in valid_cities:
+        return jsonify({'valid': False, 'error': 'Cette ville n\'existe pas, veuillez entrer une autre ville.'})
+    
+    valid = validate_answer(question, answer)
+    return jsonify({'valid': valid})
 
 # Route pour la page d'accueil
 @app.route('/')
 def index():
     return render_template('index.html')
 
-# Route pour obtenir la réponse prédite à partir d'une question de l'utilisateur
-@app.route('/get_response', methods=['POST'])
-def get_response():
-    user_question = request.json['question']
+# Route pour sauvegarder les informations de vol
+@app.route('/save_flight_info', methods=['POST'])
+def save_flight_info():
+    flight_info = request.json
     
-    # Prétraitement de la question de l'utilisateur
-    inputs = tokenizer(user_question, return_tensors='tf', truncation=True, padding=True)
+    if not os.path.exists('flights_data.json'):
+        flights_data = []
+    else:
+        with open('flights_data.json', 'r') as f:
+            flights_data = json.load(f)
     
-    # Prédiction de la réponse par le modèle
-    outputs = model(inputs)
-    prediction = tf.argmax(outputs.logits, axis=-1).numpy()[0]
-    predicted_response = responses[prediction]
+    flights_data.append(flight_info)
     
-    return jsonify({'response': predicted_response})
+    with open('flights_data.json', 'w', encoding='utf-8') as f:
+        json.dump(flights_data, f, ensure_ascii=False, indent=4)
+    
+    return jsonify({'message': 'Les informations de vol ont été sauvegardées avec succès.'})
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
