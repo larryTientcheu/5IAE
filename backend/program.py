@@ -5,6 +5,7 @@ from flask_migrate import Migrate
 import json
 from models import db, Prompts
 import src.funcs as helper_functions
+from flask_cors import CORS
 
 import ai_model.helpers.helpers as ai_helpers
 
@@ -18,6 +19,17 @@ db.init_app(app)
 
 # Database Migration
 migrate = Migrate(app, db)
+
+CORS(app, resources={r"/api/*": {"origins": "*"}})
+
+
+@app.after_request
+def after_request(response):
+    response.headers.add("Access-Control-Allow-Headers", "Content-Type, Authorization")
+    response.headers.add(
+        "Access-Control-Allow-Headers", "GET, POST, PATCH, DELETE, OPTIONS"
+    )
+    return response
 
 
 @app.route("/chats", methods=["GET"])
@@ -95,4 +107,5 @@ def remove_chat(del_id):
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
+        app.register_blueprint(swaggerui_blueprint)
         app.run(debug=True)
