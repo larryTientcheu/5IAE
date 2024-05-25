@@ -1,6 +1,6 @@
 import json
 import pandas as pd
-from transformers import BertTokenizer
+from transformers import BertTokenizer, TFBertForSequenceClassification
 from sklearn.model_selection import train_test_split
 import tensorflow as tf
 
@@ -29,20 +29,12 @@ for index, row in df.iterrows():
         "answer": row['heure_depart']
     })
     training_data.append({
-        "question": "Quel est le nom de l'aéroport d'origine ?",
-        "answer": row['aeroport_origine']
+        "question": "Quel est le nom de l'aéroport ou la ville d'origine ?",
+        "answer": row['aeroport_origine'] if row['aeroport_origine'] else row['ville_origine']
     })
     training_data.append({
-        "question": "Quelle est la ville d'origine ?",
-        "answer": row['ville_origine']
-    })
-    training_data.append({
-        "question": "Quel est le nom de l'aéroport de destination ?",
-        "answer": row['aeroport_destination']
-    })
-    training_data.append({
-        "question": "Quelle est la ville de destination ?",
-        "answer": row['ville_destination']
+        "question": "Quel est le nom de l'aéroport ou la ville de destination ?",
+        "answer": row['aeroport_destination'] if row['aeroport_destination'] else row['ville_destination']
     })
 
 # Vérifier la cohérence des données
@@ -77,8 +69,6 @@ train_features, val_features, train_labels, val_labels = train_test_split(
 train_dataset = tf.data.Dataset.from_tensor_slices((train_features, train_labels)).shuffle(len(train_labels)).batch(8)
 val_dataset = tf.data.Dataset.from_tensor_slices((val_features, val_labels)).batch(8)
 
-from transformers import TFBertForSequenceClassification
-
 # Charger le modèle BERT pour la classification
 model = TFBertForSequenceClassification.from_pretrained('bert-base-uncased', num_labels=2)
 
@@ -91,6 +81,6 @@ model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=3e-5),
 model.fit(train_dataset, validation_data=val_dataset, epochs=1)
 
 # Sauvegarder le modèle
-model_save_path = './saved_model/'  # spécifiez un chemin valide
+model_save_path = './saved_model/'
 model.save_pretrained(model_save_path)
 tokenizer.save_pretrained(model_save_path)

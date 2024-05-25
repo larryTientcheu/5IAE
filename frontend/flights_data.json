@@ -5,5 +5,19 @@
         "heure_depart": "12:15",
         "origine": "Los Angeles",
         "destination": "New York"
+    },
+    {
+        "compagnie": "American Airlines",
+        "date_depart": "2023-12-21",
+        "heure_depart": "",
+        "origine": "Atlanta",
+        "destination": "Hartsfield-Jackson Atlanta International Airport"
+    },
+    {
+        "compagnie": "American Airlines",
+        "date_depart": "2023-12-01",
+        "heure_depart": "11:30",
+        "origine": "Atlanta",
+        "destination": "Los Angeles"
     }
 ]
