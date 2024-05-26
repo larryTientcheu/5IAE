@@ -54,7 +54,13 @@ def validate(data):
             payload = df_flights[
                 (df_flights["compagnie"].str.lower() == answer)
                 | (df_flights["code_compagnie"].str.lower() == answer)
-            ]["code_compagnie"].iloc[0]
+            ]
+            payload = (
+                payload["code_compagnie"].iloc[0]
+                + "("
+                + payload["compagnie"].iloc[0]
+                + ")"
+            )
 
     keyword = "aéroport ou la ville d'origine"
     if keyword in question.lower():

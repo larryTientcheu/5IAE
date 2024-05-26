@@ -1,109 +1,147 @@
-$(document).ready(function() {
+$(document).ready(function () {
     let flightInfo = {};
     let currentQuestion = 0;
 
     const questions = [
-        'D\'accord, pour accéder à votre requête, j\'aurai besoin de plusieurs informations.',
-        'Pouvez-vous me donner la compagnie aérienne ?',
-        'Quelle est la date de départ (YYYY-MM-DD) ?',
-        'Quelle est l\'heure de départ (HH:MM) ?',
-        'Quel est le nom de l\'aéroport ou la ville d\'origine ?',
-        'Quel est le nom de l\'aéroport ou la ville de destination ?'
-    ];
+        "D'accord, pour accéder à votre requête, j'aurai besoin de plusieurs informations.",
+        "Pouvez-vous me donner la compagnie aérienne ?",
+        "Quelle est la date de départ (YYYY-MM-DD) ?",
+        "Quelle est l'heure de départ (HH:MM) ?",
+        "Quel est le nom de l'aéroport ou la ville d'origine ?",
+        "Quel est le nom de l'aéroport ou la ville de destination ?",
+  ];
 
     const fields = [
-        'null',
-        'compagnie',
-        'date_depart',
-        'heure_depart',
-        'origine',
-        'destination'
-    ];
+        "prompt",
+        "compagnie",
+        "date_depart",
+        "heure_depart",
+        "origine",
+        "destination",
+  ];
+
+    function appendMessage(sender, message) {
+        const icon =
+            sender === "Bot"
+                ? '<i class="fas fa-robot"></i>'
+                : '<i class="fas fa-user"></i>';
+        const messageClass = sender === "Bot" ? "bot-message" : "user-message";
+        const messageContent =
+            sender === "Bot"
+                ? `<p><strong>${icon} ${sender}:</strong> ${message}</p>`
+                : `<p>${message} :${icon}</p>`;
+
+      $("#chat-window").append(
+          `<div class="${messageClass}">${messageContent}</div>`
+      );
+      $("#chat-window").scrollTop($("#chat-window")[0].scrollHeight);
+  }
 
     function askQuestion() {
         if (currentQuestion < questions.length) {
-            $('#chat-window').append('<p><strong>Bot:</strong> ' + questions[currentQuestion] + '</p>');
+            appendMessage("Bot", questions[currentQuestion]);
             if (currentQuestion > 0) {
-                $('#chat-form').data('field', fields[currentQuestion]);
+                $("#chat-form").data("field", fields[currentQuestion]);
             }
         } else {
             saveFlightInfo();
         }
-    }
+  }
 
     function validateAnswerWithAI(question, answer, callback) {
         $.ajax({
-            type: 'POST',
-            contentType: 'application/json',
-            url: '/validate_answer',
+            type: "POST",
+            contentType: "application/json",
+            url: "/validate_answer",
             data: JSON.stringify({ question: question, answer: answer }),
-            success: function(response) {
+            success: function (response) {
                 callback(response.valid, response.error, response.payload);
             },
-            error: function(xhr, status, error) {
-                console.error('Erreur lors de la requête:', error);
-                callback(false, 'Erreur lors de la requête.');
-            }
-        });
-    }
+            error: function (xhr, status, error) {
+                console.error("Erreur lors de la requête:", error);
+                callback(false, "Erreur lors de la requête.");
+            },
+    });
+  }
 
     function saveFlightInfo() {
         $.ajax({
-            type: 'POST',
-            contentType: 'application/json',
-            url: '/save_flight_info',
+            type: "POST",
+            contentType: "application/json",
+            url: "/save_flight_info",
             data: JSON.stringify(flightInfo),
-            success: function(response) {
-                $('#chat-window').append('<p><strong>Bot:</strong> ' + response.message + '</p>');
+            success: function (response) {
+                appendMessage("Bot", response.message);
             },
-            error: function(xhr, status, error) {
-                console.error('Erreur lors de la requête:', error);
-            }
-        });
-    }
+            error: function (xhr, status, error) {
+                console.error("Erreur lors de la requête:", error);
+            },
+    });
+  }
 
-    $('#chat-form').on('submit', function(e) {
+    $("#chat-form").on("submit", function (e) {
         e.preventDefault();
-        let userAnswer = $('#user-input').val().trim();
-        let field = $('#chat-form').data('field');
+        let userAnswer = $("#user-input").val().trim();
+        let field = $("#chat-form").data("field");
 
-        if (currentQuestion > 0) {
-            validateAnswerWithAI(questions[currentQuestion], userAnswer, function (isValid, error, payload) {
-                if (!isValid) {
-                    $('#chat-window').append('<p><strong>Bot:</strong> ' + (error || 'Réponse invalide. Veuillez réessayer.') + '</p>');
-                    $('#user-input').val('');
-                    return;
-                }
-                if (field === 'compagnie' || field === 'origine' || field === 'destination')
-                    flightInfo[field] = payload;
-                else
-                    flightInfo[field] = userAnswer
-                $('#chat-window').append('<p><strong>Utilisateur:</strong> ' + userAnswer + '</p>');
-                $('#user-input').val('');
+      if (userAnswer === "") return; // Do nothing if the input is empty
 
-                currentQuestion++;
-                askQuestion();
-            });
-        } else {
-            $('#chat-window').append('<p><strong>Utilisateur:</strong> ' + userAnswer + '</p>');
-            flightInfo['prompt'] = userAnswer;
-            $('#chat-window').append('<p><strong>Bot:</strong> ' + "Je vais vous poser une series de questions" + '</p>');
-            $('#user-input').val('');
+      appendMessage("Utilisateur", userAnswer);
+      $("#user-input").val("");
+
+      if (currentQuestion > 0) {
+          validateAnswerWithAI(
+              questions[currentQuestion],
+              userAnswer,
+              function (isValid, error, payload) {
+                  if (!isValid) {
+                      appendMessage(
+                          "Bot",
+                          error || "Réponse invalide. Veuillez réessayer."
+                      );
+                      return;
+          }
+            if (
+                field === "compagnie" ||
+                field === "origine" ||
+                field === "destination"
+            )
+                flightInfo[field] = payload;
+          else flightInfo[field] = userAnswer;
+
             currentQuestion++;
             askQuestion();
         }
+      );
+    } else {
+        if (userAnswer === "") return; // Do nothing if the input is empty
 
-        $('#chat-window').scrollTop($('#chat-window')[0].scrollHeight);
-    });
-    // Initialiser la conversation
-    $('#chat-window').append('<p><strong>Bot:</strong> Comment puis-je vous aider aujourd\'hui ?</p>');
-
-    $('#chat-form').data('field', 'null');
-
-
-    // Ajouter un écouteur d'événement pour la première entrée utilisateur
-    $('#chat-form').one('submit', function(e) {
-        e.preventDefault();
+        flightInfo["prompt"] = userAnswer;
+        currentQuestion++;
         askQuestion();
-    });
+    }
+
+      $("#chat-window").scrollTop($("#chat-window")[0].scrollHeight);
+  });
+    // Initialiser la conversation
+    appendMessage("Bot", "Comment puis-je vous aider aujourd'hui ?");
+    $("#chat-form").data("field", "prompt");
+
+    //   // Ajouter un écouteur d'événement pour la première entrée utilisateur
+    //   $("#chat-form").one("submit", function (e) {
+    //     e.preventDefault();
+    //     askQuestion();
+    //   });
+    debugger;
+    // Ajouter un écouteur d'événement pour la première entrée utilisateur
+    $("#chat-form").one("submit", function (e) {
+        e.preventDefault();
+        let userRequest = $("#user-input").val().trim();
+        if (userRequest === "") {
+            return; // Do nothing if the input is empty
+        }
+        appendMessage("Utilisateur", userRequest);
+        $("#user-input").val("");
+        askQuestion();
+  });
 });

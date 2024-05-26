@@ -2,6 +2,7 @@ from pathlib import Path
 import joblib
 from joblib import Memory
 import pandas as pd
+
 # import time
 
 memory = Memory(Path(__file__).parent / ".cachedir", verbose=0)
@@ -56,15 +57,63 @@ def make_prediction(inputs):
     return prediction[0][0]
 
 
-# Helper Test function
-# data = {
-#     "AIRLINE": "AS",
-#     "SCHEDULED_DEPARTURE": "2024-12-28 06:23:00",
-#     "ORIGIN_AIRPORT": "HOU",
-#     "DESTINATION_AIRPORT": "BOS",
+def load_dfs():
+    path = Path(__file__).parent
+    df_airline = pd.read_pickle(path / "airlines_dataframe")
+    df_airports = pd.read_pickle(path / "airports_dataframe")
+    return df_airline, df_airports
+
+
+def format_prompt_response(prompt):
+    df_airline, df_airports = load_dfs()
+
+    prompt["airline"] = (
+        prompt["airline"]
+        + "("
+        + df_airline[df_airline["CODE"] == prompt["airline"]]["AIRLINE"].iloc[0]
+        + ")"
+    )
+    prompt["origin_airport"] = (
+        prompt["origin_airport"]
+        + "("
+        + df_airports[df_airports["Airport_Code"] == prompt["origin_airport"]][
+            "Airport_Name"
+        ].iloc[0]
+        + ")"
+    )
+    prompt["destination_airport"] = (
+        prompt["destination_airport"]
+        + "("
+        + df_airports[df_airports["Airport_Code"] == prompt["destination_airport"]][
+            "Airport_Name"
+        ].iloc[0]
+        + ")"
+    )
+    return prompt
+
+    # Helper Test function
+    # data = {
+    #     "AIRLINE": "AS",
+    #     "SCHEDULED_DEPARTURE": "2024-12-28 06:23:00",
+    #     "ORIGIN_AIRPORT": "HOU",
+    #     "DESTINATION_AIRPORT": "BOS",
+    # }
+    # start = time.time()
+    # price = make_prediction(data)
+    # end = time.time()
+    # print("\nThe function took {:.2f} s to compute.".format(end - start))
+    # print("\nThe price is:\n {}".format(price))
+
+
+# prompt_test = {
+#     "price": "660.51324",
+#     "airline": "AA",
+#     "destination_airport": "MIA",
+#     "id": 22,
+#     "origin_airport": "LAX",
+#     "prompt": "What is the price tests test",
+#     "scheduled_departure": "Fri, 24 May 2024 08:00:00 GMT",
+#     "success": True,
 # }
-# start = time.time()
-# price = make_prediction(data)
-# end = time.time()
-# print("\nThe function took {:.2f} s to compute.".format(end - start))
-# print("\nThe price is:\n {}".format(price))
+
+# print(format_prompt_response(prompt_test))

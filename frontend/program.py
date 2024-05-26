@@ -10,12 +10,14 @@ app = Flask(__name__)
 
 url = "http://localhost:5005/"
 
+
 @app.route("/")
 def index():
     chats = requests.get(url + "chats", timeout=25)
-    # print(chats.json())
+    all_chats = chats.json()
+    prompts = [prompt for prompt in all_chats["prompts"]]
     # get a list of prompts and pass to the index
-    return render_template("index.html")
+    return render_template("index.html", chats=prompts)
 
 
 @app.route("/validate_answer", methods=["POST"])
