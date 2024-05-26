@@ -12,7 +12,7 @@ $(document).ready(function() {
     ];
 
     const fields = [
-        null,
+        'null',
         'compagnie',
         'date_depart',
         'heure_depart',
@@ -38,7 +38,7 @@ $(document).ready(function() {
             url: '/validate_answer',
             data: JSON.stringify({ question: question, answer: answer }),
             success: function(response) {
-                callback(response.valid, response.error);
+                callback(response.valid, response.error, response.payload);
             },
             error: function(xhr, status, error) {
                 console.error('Erreur lors de la requête:', error);
@@ -68,14 +68,16 @@ $(document).ready(function() {
         let field = $('#chat-form').data('field');
 
         if (currentQuestion > 0) {
-            validateAnswerWithAI(questions[currentQuestion], userAnswer, function(isValid, error) {
+            validateAnswerWithAI(questions[currentQuestion], userAnswer, function (isValid, error, payload) {
                 if (!isValid) {
                     $('#chat-window').append('<p><strong>Bot:</strong> ' + (error || 'Réponse invalide. Veuillez réessayer.') + '</p>');
                     $('#user-input').val('');
                     return;
                 }
-
-                flightInfo[field] = userAnswer;
+                if (field === 'compagnie' || field === 'origine' || field === 'destination')
+                    flightInfo[field] = payload;
+                else
+                    flightInfo[field] = userAnswer
                 $('#chat-window').append('<p><strong>Utilisateur:</strong> ' + userAnswer + '</p>');
                 $('#user-input').val('');
 
@@ -84,6 +86,8 @@ $(document).ready(function() {
             });
         } else {
             $('#chat-window').append('<p><strong>Utilisateur:</strong> ' + userAnswer + '</p>');
+            flightInfo['prompt'] = userAnswer;
+            $('#chat-window').append('<p><strong>Bot:</strong> ' + "Je vais vous poser une series de questions" + '</p>');
             $('#user-input').val('');
             currentQuestion++;
             askQuestion();
@@ -91,17 +95,15 @@ $(document).ready(function() {
 
         $('#chat-window').scrollTop($('#chat-window')[0].scrollHeight);
     });
-
     // Initialiser la conversation
     $('#chat-window').append('<p><strong>Bot:</strong> Comment puis-je vous aider aujourd\'hui ?</p>');
-    $('#chat-form').data('field', null);
+
+    $('#chat-form').data('field', 'null');
+
 
     // Ajouter un écouteur d'événement pour la première entrée utilisateur
     $('#chat-form').one('submit', function(e) {
         e.preventDefault();
-        let userRequest = $('#user-input').val().trim();
-        $('#chat-window').append('<p><strong>Utilisateur:</strong> ' + userRequest + '</p>');
-        $('#user-input').val('');
         askQuestion();
     });
 });
