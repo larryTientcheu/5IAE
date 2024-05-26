@@ -20,7 +20,7 @@ db.init_app(app)
 # Database Migration
 migrate = Migrate(app, db)
 
-CORS(app, resources={r"/api/*": {"origins": "*"}})
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 
 @app.after_request
@@ -84,7 +84,7 @@ def add_chat():
                 }
             )
         except Exception as e:
-            # print(e)
+            print(e)
             db.session.rollback()
             return abort(500)
         finally:
@@ -107,5 +107,4 @@ def remove_chat(del_id):
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
-        app.register_blueprint(swaggerui_blueprint)
-        app.run(debug=True)
+        app.run(debug=True, port=5005)

@@ -3,6 +3,7 @@
 venv*/
 __pycache__/
 .env/
+.env*
 dist/
 docs/_build/
 .coverage*

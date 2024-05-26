@@ -1,9 +1,16 @@
 import os
+from dotenv import load_dotenv
 from pathlib import Path
-
-SECRET_KEY = os.urandom(32)
 
 basedir = Path(__file__).parent
 
-DATABASE_URI = "postgresql://postgres:grimm@localhost:5432/chatbot"
+if os.getenv("ENVIRONMENT") == "dev":
+    load_dotenv(basedir / ".env.dev", verbose=True)
+elif os.getenv("ENVIRONMENT") == "docker":
+    load_dotenv(basedir / ".env.docker", verbose=True)
+
+SECRET_KEY = os.urandom(32)
+
+
+DATABASE_URI = os.getenv("DATABASE_URI")
 SQLALCHEMY_TRACK_MODIFICATIONS = False
