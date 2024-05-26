@@ -144,11 +144,16 @@
             <h5 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
                 <span>Prompts</span>
             </h5>
-            <ul class="nav flex-column text-white" id="chat-prompts">
-            <!-- Les messages du chatbot apparaîtront ici -->{% for chat in
-            chats %}
-            <li>{{chat.prompt}}</li>
-            {% endfor %}
+            <ul class="nav flex-column p-3 rounded" id="chat-prompts">
+                <!-- Les messages du chatbot apparaîtront ici -->
+                {% for chat in chats %}
+                <li class="nav-item mb-2">
+                    <a href="#" class="nav-link bg-white rounded shadow-sm p-2" title="{{ chat.prompt }}">
+                        {{ chat.prompt }}
+                    </a>
+                </li>
+                {% endfor %}
+                
             </ul>
             </div>
             </nav>

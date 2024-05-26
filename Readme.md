@@ -65,17 +65,17 @@ This is a flight booking chatbot done by:
 
 #### From DockerHub
 
-1. Pull the image from Dockerhub using ``
+1. Pull the image from Dockerhub using `docker pull ngaleuj/5IAE`
 
-2. Run the image using ``
+2. Run the image using `docker run ngaleuj/5IAE`
 
 3. Access the chatbot using `http://localhost:5000`
 
 #### Build the docker image
 
 1. Create an environment file called `.env.docker`.
-
-    * The `.env.docker` file should have a key called `DATABASE_URI` . This is the connection string to the database. For example; the .env file could have `DATABASE_URI=postgresql://postgres:grimm@host.docker.internal:5432/chatbot`. This means; Using `postgresql`, connect to a database called `chatbot` on `host.docker.internal:5432`  with user `postgres`  and password `grimm`
+   
+   * The `.env.docker` file should have a key called `DATABASE_URI` . This is the connection string to the database. For example; the .env file could have `DATABASE_URI=postgresql://postgres:grimm@host.docker.internal:5432/chatbot`. This means; Using `postgresql`, connect to a database called `chatbot` on `host.docker.internal:5432`  with user `postgres`  and password `grimm`
 
 2. From the root of the project, run `docker-compose up --build`
 
@@ -92,7 +92,7 @@ This project consists of two parts:
 #### Prerequisites
 
 1. Create an environment file called `.env`
-
+   
    * The `.env` file should have a key called `DATABASE_URI` . This is the connection string to the database. For example; the .env file could have `DATABASE_URI=postgresql://postgres:grimm@localhost:5432/chatbot`. This means; Using `postgresql`, connect to a database called `chatbot` on `localhost:5432`  with user `postgres`  and password `grimm`
 
 2. Make sure the folder helpers contains `airlines_dataframe` , and `airports_dataframe`.
@@ -138,7 +138,7 @@ createbd chatbot
   ```
   
   * The backend runs on
-
+    
     ```bash
     http://localhost:50005
     ```
@@ -166,7 +166,7 @@ createbd chatbot
   ```
   
   * The frontend runs on
-
+    
     ```bash
     http://localhost:5000
     ```
