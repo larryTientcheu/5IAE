@@ -76,11 +76,14 @@ def add_chat():
             )
             new_chat.insert()
             db.session.commit()
+            prompt = new_chat.format()
+            prompt = ai_helpers.format_prompt_response(prompt)
+
             return jsonify(
                 {
                     "success": True,
                     "price": str(price),
-                    "prompt": new_chat.format(),
+                    "prompt": prompt,
                 }
             )
         except Exception as e:
