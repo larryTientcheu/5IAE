@@ -36,7 +36,7 @@ def after_request(response):
 def chat():
     prompts = Prompts.query.all()
     if not prompts:
-        abort(404)
+        prompts = []
     prompts = [prompt.format() for prompt in prompts]
     return jsonify({"success": True, "prompts": prompts})
 
@@ -110,4 +110,4 @@ def remove_chat(del_id):
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
-        app.run(debug=True, port=5005)
+        app.run(debug=True, host="0.0.0.0", port=5005)

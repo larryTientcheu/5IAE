@@ -1,0 +1,39 @@
+services:
+  backend_api:
+    image: backend_api
+    ports:
+      - 5005:5005
+    build:
+      context: backend/
+    depends_on:
+      - db_postgres
+    environment:
+      - ENVIRONMENT=docker
+    env_file:
+      - /backend/.env.docker
+    restart: always
+    
+  frontend:
+    image: frontend
+    ports:
+      - 5000:5000
+    build:
+      context: frontend/
+    depends_on:
+      - backend_api
+    environment:
+      - ENVIRONMENT=docker
+
+  db_postgres:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: grimm
+      POSTGRES_DB: chatbot
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+volumes:
+  pgdata:

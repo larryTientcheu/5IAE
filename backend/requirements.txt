@@ -5,7 +5,8 @@ numpy
 psycopg2
 flask_sqlalchemy
 flask_migrate
-dotenv
+python-dotenv
+flask_cors
 
 #ai model
 scikit-learn
