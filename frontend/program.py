@@ -8,16 +8,22 @@ import requests
 
 app = Flask(__name__)
 
-url = "http://localhost:5005/"
+if os.getenv("ENVIRONMENT") == "docker":
+    URL = "http://host.docker.internal:5005/"
+else:
+    URL = "http://localhost:5005/"
 
 
 @app.route("/")
 def index():
-    chats = requests.get(url + "chats", timeout=25)
-    all_chats = chats.json()
-    prompts = [prompt for prompt in all_chats["prompts"]]
-    # get a list of prompts and pass to the index
-    return render_template("index.html", chats=prompts)
+    try:
+        chats = requests.get(URL + "chats", timeout=25)
+        all_chats = chats.json()
+        prompts = [prompt for prompt in all_chats["prompts"]]
+        # get a list of prompts and pass to the index
+        return render_template("index.html", chats=prompts)
+    except Exception as e:
+        return render_template("index.html", chats=[])
 
 
 @app.route("/validate_answer", methods=["POST"])
@@ -42,8 +48,9 @@ def save_flight_info():
             sent_to_back["origin"] = payload["origine"]
             sent_to_back["destination"] = payload["destination"]
 
+        print(sent_to_back)
         # Call the backend api chat here
-        response = requests.post(url + "chat", json=sent_to_back, timeout=25)
+        response = requests.post(URL + "chat", json=sent_to_back, timeout=25)
 
         if response.status_code != 200:
             return {"message": "Une erreur s'est produite"}

@@ -4,12 +4,14 @@ from pathlib import Path
 
 basedir = Path(__file__).parent
 
-# if os.getenv("ENVIRONMENT") == "dev":
-#     load_dotenv(basedir / ".env", verbose=True)
-# elif os.getenv("ENVIRONMENT") == "docker":
-#     load_dotenv(basedir / ".env.docker", verbose=True)
+if os.getenv("ENVIRONMENT") == "dev":
+    load_dotenv(basedir / ".env", verbose=True)
+elif os.getenv("ENVIRONMENT") == "docker":
+    load_dotenv(basedir / ".env.docker", verbose=True)
+else:
+    load_dotenv()
 
-load_dotenv()
+# load_dotenv()
 
 SECRET_KEY = os.urandom(32)
 
