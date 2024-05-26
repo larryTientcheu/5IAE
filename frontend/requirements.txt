@@ -1,8 +1,7 @@
-Flask
-Werkzeug
+flask
 numpy
+pandas
 tensorflow
 joblib
 tf-keras
-
-# Ajoutez d'autres dépendances ici
+transformers

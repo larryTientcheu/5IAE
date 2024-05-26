@@ -59,17 +59,41 @@ This is a flight booking chatbot done by:
 └── ~WRL0336.tmp
 ```
 
+## HOW TO RUN
+
+### With Docker
+
+#### From DockerHub
+
+1. Pull the image from Dockerhub using ``
+
+2. Run the image using ``
+
+3. Access the chatbot using `http://localhost:5000`
+
+#### Build the docker image
+
+1. Create an environment file called `.env.docker`.
+
+    * The `.env.docker` file should have a key called `DATABASE_URI` . This is the connection string to the database. For example; the .env file could have `DATABASE_URI=postgresql://postgres:grimm@host.docker.internal:5432/chatbot`. This means; Using `postgresql`, connect to a database called `chatbot` on `host.docker.internal:5432`  with user `postgres`  and password `grimm`
+
+2. From the root of the project, run `docker-compose up --build`
+
+3. Access the chatbot using `http://localhost:5000`
+
+### From source
+
 This project consists of two parts:
 
 * A backend and a Frontend.
 
 ### Setting up the Backend
 
-#### Prerequisites:
+#### Prerequisites
 
 1. Create an environment file called `.env`
-   
-   * The `.env` file should have a key called `DATABASE_URI` . This is the connection string to the database. For example; the .env file could have `DATABASE_URI=postgresql://postgres:grimm@localhost:5432/chatbot`. This means; Using `postgresql`, connect to a database called chatbot on `localhost:5432`  with user ` postgres`  and password `grimm`
+
+   * The `.env` file should have a key called `DATABASE_URI` . This is the connection string to the database. For example; the .env file could have `DATABASE_URI=postgresql://postgres:grimm@localhost:5432/chatbot`. This means; Using `postgresql`, connect to a database called `chatbot` on `localhost:5432`  with user `postgres`  and password `grimm`
 
 2. Make sure the folder helpers contains `airlines_dataframe` , and `airports_dataframe`.
 
@@ -114,16 +138,16 @@ createbd chatbot
   ```
   
   * The backend runs on
-    
+
     ```bash
     http://localhost:50005
     ```
 
 ### Setting up the Frontend
 
-#### Prerequisites:
+#### Prerequisites
 
-1. In the folder frontend/chatbot, the datasets `airlines.csv & airline_prices.csv` must be present. 
+1. In the folder frontend/chatbot, the datasets `airlines.csv & airline_prices.csv` must be present.
 
 2. After training the chatbot in chatbot.ipynb, a file called flights_dataframe is produced. This is the main data set for the conversational logic of the chatbot.
 
@@ -142,9 +166,7 @@ createbd chatbot
   ```
   
   * The frontend runs on
-    
+
     ```bash
     http://localhost:5000
     ```
-
-
