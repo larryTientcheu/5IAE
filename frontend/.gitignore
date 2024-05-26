@@ -10,3 +10,6 @@ htmlcov/
 docs/_build/
 env/
 saved_model/
+chatbot/tmodels/
+~*.docx
+*.tmp
