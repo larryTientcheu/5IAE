@@ -1,0 +1,15 @@
+# API Execution
+flask
+pandas
+numpy
+psycopg2
+flask_sqlalchemy
+flask_migrate
+dotenv
+
+#ai model
+scikit-learn
+scipy
+seaborn
+# Tensorflow with cuda support.
+tensorflow

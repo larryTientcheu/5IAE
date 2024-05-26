@@ -1,0 +1,8 @@
+Flask
+Werkzeug
+numpy
+tensorflow
+joblib
+tf-keras
+
+# Ajoutez d'autres dépendances ici

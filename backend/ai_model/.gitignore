@@ -1,0 +1,4 @@
+dataset/*
+.venv
+tmodels/random_forest.pkl
+.cachedir
