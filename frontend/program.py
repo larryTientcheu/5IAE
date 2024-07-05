@@ -52,7 +52,7 @@ def save_flight_info():
 
         print(sent_to_back)
         # Call the backend api chat here
-        response = requests.post(URL + "chat", json=sent_to_back, timeout=25)
+        response = requests.post(f"{URL}chats", json=sent_to_back, timeout=120)
 
         if response.status_code != 200:
             return {"message": "Une erreur s'est produite"}

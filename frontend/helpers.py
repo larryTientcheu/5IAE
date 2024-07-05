@@ -7,12 +7,12 @@ from flask import jsonify
 import json
 
 
-def load_model():
-    path = Path(__file__).parent / "chatbot"
-    model = TFBertForSequenceClassification.from_pretrained(path / "tmodels/")
-    tokenizer = BertTokenizer.from_pretrained(path / "tmodels/")
+# def load_model():
+#     path = Path(__file__).parent / "chatbot"
+#     model = TFBertForSequenceClassification.from_pretrained(path / "tmodels/")
+#     tokenizer = BertTokenizer.from_pretrained(path / "tmodels/")
 
-    return model, tokenizer
+#     return model, tokenizer
 
 
 # def chat(question, answer):

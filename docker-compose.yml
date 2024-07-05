@@ -22,7 +22,7 @@ services:
     depends_on:
       - backend_api
     environment:
-      - ENVIRONMENT=docker
+      - ENVIRONMENT=Render
 
   db_postgres:
     image: postgres:latest
