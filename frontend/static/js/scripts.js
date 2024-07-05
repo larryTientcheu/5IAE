@@ -127,13 +127,6 @@ $(document).ready(function () {
     appendMessage("Bot", "Comment puis-je vous aider aujourd'hui ?");
     $("#chat-form").data("field", "prompt");
 
-    //   // Ajouter un écouteur d'événement pour la première entrée utilisateur
-    //   $("#chat-form").one("submit", function (e) {
-    //     e.preventDefault();
-    //     askQuestion();
-    //   });
-    debugger;
-    // Ajouter un écouteur d'événement pour la première entrée utilisateur
     $("#chat-form").one("submit", function (e) {
         e.preventDefault();
         let userRequest = $("#user-input").val().trim();

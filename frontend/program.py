@@ -10,6 +10,8 @@ app = Flask(__name__)
 
 if os.getenv("ENVIRONMENT") == "docker":
     URL = "http://host.docker.internal:5005/"
+elif os.getenv("ENVIRONMENT") == "Render":
+    URL = os.getenv("RENDER_BACKEND_URL")
 else:
     URL = "http://localhost:5005/"
 
@@ -17,7 +19,7 @@ else:
 @app.route("/")
 def index():
     try:
-        chats = requests.get(URL + "chats", timeout=25)
+        chats = requests.get(f"{URL}chats", timeout=60)
         all_chats = chats.json()
         prompts = [prompt for prompt in all_chats["prompts"]]
         # get a list of prompts and pass to the index

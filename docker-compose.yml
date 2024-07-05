@@ -1,6 +1,6 @@
 services:
   backend_api:
-    image: backend_api
+    image: ngaleuj/backend_api:latest
     ports:
       - 5005:5005
     build:
@@ -14,7 +14,7 @@ services:
     restart: always
     
   frontend:
-    image: frontend
+    image: ngaleuj/frontend:latest
     ports:
       - 5000:5000
     build:

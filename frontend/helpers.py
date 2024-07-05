@@ -2,8 +2,7 @@ from pathlib import Path
 import joblib
 from joblib import Memory
 import pandas as pd
-from transformers import BertTokenizer, TFBertForSequenceClassification
-import tensorflow as tf
+# from transformers import BertTokenizer, TFBertForSequenceClassification
 from flask import jsonify
 import json
 
@@ -16,15 +15,15 @@ def load_model():
     return model, tokenizer
 
 
-def chat(question, answer):
-    model, tokenizer = load_model()
+# def chat(question, answer):
+#     model, tokenizer = load_model()
 
-    inputs = tokenizer(
-        question, answer, return_tensors="tf", truncation=True, padding=True
-    )
-    outputs = model(inputs)  # type: ignore
-    prediction = tf.argmax(outputs.logits, axis=-1).numpy()[0]
-    return bool(prediction)
+#     inputs = tokenizer(
+#         question, answer, return_tensors="tf", truncation=True, padding=True
+#     )
+#     outputs = model(inputs)  # type: ignore
+#     prediction = tf.argmax(outputs.logits, axis=-1).numpy()[0]
+#     return bool(prediction)
 
 
 def load_df():
@@ -84,9 +83,9 @@ def validate(data):
                 | (df_flights["code_aeroport_destination"].str.lower() == answer)
                 | (df_flights["ville_destination"].str.lower() == answer)
             ]["code_aeroport_destination"].iloc[0]
-    valid = chat(question, answer)
+    # valid = chat(question, answer)
 
-    return payload, {"valid": valid, "error": ""}
+    return payload, {"valid": True, "error": ""}
 
 
 def format_user_query(data):
