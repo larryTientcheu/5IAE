@@ -2,6 +2,7 @@ from pathlib import Path
 import joblib
 from joblib import Memory
 import pandas as pd
+
 # from transformers import BertTokenizer, TFBertForSequenceClassification
 from flask import jsonify
 import json
@@ -38,52 +39,73 @@ def validate(data):
     answer = data["answer"].lower()
     payload = {}
 
-    unique_values_all_columns = pd.concat(
-        [pd.Series(df_flights[col].str.lower().unique()) for col in df_flights.columns],
-        ignore_index=True,
-    )
     keyword = "compagnie"
     if keyword in question.lower():
-        if answer not in unique_values_all_columns.values:
+        unique_values_all_columns = pd.concat(
+            [
+                pd.Series(df_flights["compagnie"].str.lower().unique()),
+                pd.Series(df_flights["code_compagnie"].str.lower().unique()),
+            ],
+            ignore_index=True,
+        )
+        answer = [s for s in unique_values_all_columns.values if answer in s.lower()]
+        if answer[0] not in unique_values_all_columns.values:
             return payload, {
                 "valid": False,
                 "error": "Cette compagnie n'existe pas, veuillez entrer une autre compagnie.",
             }
         else:
             payload = df_flights[
-                (df_flights["compagnie"].str.lower() == answer)
-                | (df_flights["code_compagnie"].str.lower() == answer)
+                (df_flights["compagnie"].str.lower() == answer[0])
+                | (df_flights["code_compagnie"].str.lower() == answer[0])
             ]
             payload = payload["code_compagnie"].iloc[0]
 
     keyword = "aéroport ou la ville d'origine"
     if keyword in question.lower():
-        if answer not in unique_values_all_columns.values:
+        unique_values_all_columns = pd.concat(
+            [
+                pd.Series(df_flights["aeroport_origine"].str.lower().unique()),
+                pd.Series(df_flights["code_aeroport_origine"].str.lower().unique()),
+                pd.Series(df_flights["ville_origine"].str.lower().unique()),
+            ],
+            ignore_index=True,
+        )
+        answer = [s for s in unique_values_all_columns.values if answer in s.lower()]
+        if answer[0] not in unique_values_all_columns.values:
             return payload, {
                 "valid": False,
                 "error": "Cet aéroport ou cette ville n'existe pas, veuillez entrer un autre nom.",
             }
         else:
             payload = df_flights[
-                (df_flights["aeroport_origine"].str.lower() == answer)
-                | (df_flights["code_aeroport_origine"].str.lower() == answer)
-                | (df_flights["ville_origine"].str.lower() == answer)
+                (df_flights["aeroport_origine"].str.lower() == answer[0])
+                | (df_flights["code_aeroport_origine"].str.lower() == answer[0])
+                | (df_flights["ville_origine"].str.lower() == answer[0])
             ]["code_aeroport_origine"].iloc[0]
 
     keyword = "aéroport ou la ville de destination"
     if keyword in question.lower():
-        if answer not in unique_values_all_columns.values:
+        unique_values_all_columns = pd.concat(
+            [
+                pd.Series(df_flights["aeroport_destination"].str.lower().unique()),
+                pd.Series(df_flights["code_aeroport_destination"].str.lower().unique()),
+                pd.Series(df_flights["ville_destination"].str.lower().unique()),
+            ],
+            ignore_index=True,
+        )
+        answer = [s for s in unique_values_all_columns.values if answer in s.lower()]
+        if answer[0] not in unique_values_all_columns.values:
             return payload, {
                 "valid": False,
                 "error": "Cet aéroport ou cette ville n'existe pas, veuillez entrer un autre nom.",
             }
         else:
             payload = df_flights[
-                (df_flights["aeroport_destination"].str.lower() == answer)
-                | (df_flights["code_aeroport_destination"].str.lower() == answer)
-                | (df_flights["ville_destination"].str.lower() == answer)
+                (df_flights["aeroport_destination"].str.lower() == answer[0])
+                | (df_flights["code_aeroport_destination"].str.lower() == answer[0])
+                | (df_flights["ville_destination"].str.lower() == answer[0])
             ]["code_aeroport_destination"].iloc[0]
     # valid = chat(question, answer)
 
     return payload, {"valid": True, "error": ""}
-

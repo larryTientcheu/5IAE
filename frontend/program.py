@@ -1,17 +1,12 @@
-import os
 from flask import Flask, render_template, request, jsonify
-import json
-import numpy as np
-import joblib
 import requests
-from dotenv import load_dotenv
 import config
 import helpers
 
 app = Flask(__name__)
 app.config.from_object("config")
 
-URL = config.URL
+URL = app.config.get("URL")
 
 @app.route("/")
 def index():
@@ -64,4 +59,4 @@ def save_flight_info():
 
 
 if __name__ == "__main__":
-    app.run(debug=config.DEBUG, host="0.0.0.0", port=5000)
+    app.run(debug=app.config.get("DEBUG"), host="0.0.0.0", port=5000)

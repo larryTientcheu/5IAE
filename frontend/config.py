@@ -3,9 +3,9 @@ from dotenv import load_dotenv
 from pathlib import Path
 
 basedir = Path(__file__).parent
-DEBUG = os.getenv("DEBUG")
-
 load_dotenv(basedir / ".env", verbose=True)
+
+DEBUG = os.getenv("DEBUG")
 
 if os.getenv("ENV") == 'docker':
     URL = os.getenv("DOCKER_BACKEND_URL")

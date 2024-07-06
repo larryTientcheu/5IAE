@@ -12,8 +12,10 @@ app = Flask(__name__)
 app.config.from_object("config")
 
 # connect to a local postgresql database
-app.config["SQLALCHEMY_DATABASE_URI"] = config.DATABASE_URI
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = config.SQLALCHEMY_TRACK_MODIFICATIONS
+app.config["SQLALCHEMY_DATABASE_URI"] = debug = app.config.get("DATABASE_URI")
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = app.config.get(
+    "SQLALCHEMY_TRACK_MODIFICATIONS"
+)
 db.init_app(app)
 
 # Database Migration
@@ -109,4 +111,4 @@ def remove_chat(del_id):
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
-        app.run(debug=config.DEBUG, host="0.0.0.0", port=5005)
+        app.run(debug=app.config.get("DEBUG"), host="0.0.0.0", port=5005)
