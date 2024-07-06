@@ -8,7 +8,7 @@ services:
     depends_on:
       - db_postgres
     environment:
-      - ENVIRONMENT=prod
+      - ENV=docker
     env_file:
       - /backend/.env.docker
     restart: always
@@ -22,17 +22,19 @@ services:
     depends_on:
       - backend_api
     environment:
-      - ENVIRONMENT=prod
+      - ENV=docker
+    env_file:
+      - /frontend/.env
+    restart: always
+    
 
   db_postgres:
     image: postgres:latest
     ports:
       - "5432:5432"
     restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: grimm
-      POSTGRES_DB: chatbot
+    env_file:
+      - .env
     volumes:
       - pgdata:/var/lib/postgresql/data
 volumes:

@@ -6,6 +6,7 @@ basedir = Path(__file__).parent
 load_dotenv(basedir / ".env", verbose=True)
 
 DEBUG = os.getenv("DEBUG")
+# URL = ""
 
 if os.getenv("ENV") == 'docker':
     URL = os.getenv("DOCKER_BACKEND_URL")
