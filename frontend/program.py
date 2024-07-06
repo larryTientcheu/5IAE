@@ -1,23 +1,17 @@
 from flask import Flask, render_template, request, jsonify
-import json
-import numpy as np
-import os
-import joblib
-import helpers
 import requests
+import config
+import helpers
 
 app = Flask(__name__)
+app.config.from_object("config")
 
-if os.getenv("ENVIRONMENT") == "docker":
-    URL = "http://host.docker.internal:5005/"
-else:
-    URL = "http://localhost:5005/"
-
+URL = app.config.get("URL")
 
 @app.route("/")
 def index():
     try:
-        chats = requests.get(URL + "chats", timeout=25)
+        chats = requests.get(f"{URL}chats", timeout=60)
         all_chats = chats.json()
         prompts = [prompt for prompt in all_chats["prompts"]]
         # get a list of prompts and pass to the index
@@ -50,7 +44,7 @@ def save_flight_info():
 
         print(sent_to_back)
         # Call the backend api chat here
-        response = requests.post(URL + "chat", json=sent_to_back, timeout=25)
+        response = requests.post(f"{URL}chat", json=sent_to_back, timeout=120)
 
         if response.status_code != 200:
             return {"message": "Une erreur s'est produite"}
@@ -65,4 +59,4 @@ def save_flight_info():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0")
+    app.run(debug=app.config.get("DEBUG"), host="0.0.0.0", port=5000)

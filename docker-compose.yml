@@ -1,6 +1,6 @@
 services:
   backend_api:
-    image: backend_api
+    image: ngaleuj/backend_api:latest
     ports:
       - 5005:5005
     build:
@@ -8,13 +8,13 @@ services:
     depends_on:
       - db_postgres
     environment:
-      - ENVIRONMENT=docker
+      - ENVIRONMENT=prod
     env_file:
       - /backend/.env.docker
     restart: always
     
   frontend:
-    image: frontend
+    image: ngaleuj/frontend:latest
     ports:
       - 5000:5000
     build:
@@ -22,7 +22,7 @@ services:
     depends_on:
       - backend_api
     environment:
-      - ENVIRONMENT=docker
+      - ENVIRONMENT=prod
 
   db_postgres:
     image: postgres:latest

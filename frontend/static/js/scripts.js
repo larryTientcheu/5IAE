@@ -9,7 +9,7 @@ $(document).ready(function () {
         "Quelle est l'heure de départ (HH:MM) ?",
         "Quel est le nom de l'aéroport ou la ville d'origine ?",
         "Quel est le nom de l'aéroport ou la ville de destination ?",
-  ];
+    ];
 
     const fields = [
         "prompt",
@@ -18,7 +18,7 @@ $(document).ready(function () {
         "heure_depart",
         "origine",
         "destination",
-  ];
+    ];
 
     function appendMessage(sender, message) {
         const icon =
@@ -31,11 +31,11 @@ $(document).ready(function () {
                 ? `<p><strong>${icon} ${sender}:</strong> ${message}</p>`
                 : `<p>${message} :${icon}</p>`;
 
-      $("#chat-window").append(
-          `<div class="${messageClass}">${messageContent}</div>`
-      );
-      $("#chat-window").scrollTop($("#chat-window")[0].scrollHeight);
-  }
+        $("#chat-window").append(
+            `<div class="${messageClass}">${messageContent}</div>`
+        );
+        $("#chat-window").scrollTop($("#chat-window")[0].scrollHeight);
+    }
 
     function askQuestion() {
         if (currentQuestion < questions.length) {
@@ -46,7 +46,7 @@ $(document).ready(function () {
         } else {
             saveFlightInfo();
         }
-  }
+    }
 
     function validateAnswerWithAI(question, answer, callback) {
         $.ajax({
@@ -61,8 +61,8 @@ $(document).ready(function () {
                 console.error("Erreur lors de la requête:", error);
                 callback(false, "Erreur lors de la requête.");
             },
-    });
-  }
+        });
+    }
 
     function saveFlightInfo() {
         $.ajax({
@@ -76,64 +76,57 @@ $(document).ready(function () {
             error: function (xhr, status, error) {
                 console.error("Erreur lors de la requête:", error);
             },
-    });
-  }
+        });
+    }
 
     $("#chat-form").on("submit", function (e) {
         e.preventDefault();
         let userAnswer = $("#user-input").val().trim();
         let field = $("#chat-form").data("field");
 
-      if (userAnswer === "") return; // Do nothing if the input is empty
+        if (userAnswer === "") return; // Do nothing if the input is empty
 
-      appendMessage("Utilisateur", userAnswer);
-      $("#user-input").val("");
+        appendMessage("Utilisateur", userAnswer);
+        $("#user-input").val("");
 
-      if (currentQuestion > 0) {
-          validateAnswerWithAI(
-              questions[currentQuestion],
-              userAnswer,
-              function (isValid, error, payload) {
-                  if (!isValid) {
-                      appendMessage(
-                          "Bot",
-                          error || "Réponse invalide. Veuillez réessayer."
-                      );
-                      return;
-          }
-            if (
-                field === "compagnie" ||
-                field === "origine" ||
-                field === "destination"
-            )
-                flightInfo[field] = payload;
-          else flightInfo[field] = userAnswer;
+        if (currentQuestion > 0) {
+            validateAnswerWithAI(
+                questions[currentQuestion],
+                userAnswer,
+                function (isValid, error, payload) {
+                    if (!isValid) {
+                        appendMessage(
+                            "Bot",
+                            error || "Réponse invalide. Veuillez réessayer."
+                        );
+                        return;
+                    }
+                    if (
+                        field === "compagnie" ||
+                        field === "origine" ||
+                        field === "destination"
+                    )
+                        flightInfo[field] = payload;
+                    else flightInfo[field] = userAnswer;
 
+                    currentQuestion++;
+                    askQuestion();
+                }
+            );
+        } else {
+            if (userAnswer === "") return; // Do nothing if the input is empty
+
+            flightInfo["prompt"] = userAnswer;
             currentQuestion++;
             askQuestion();
         }
-      );
-    } else {
-        if (userAnswer === "") return; // Do nothing if the input is empty
 
-        flightInfo["prompt"] = userAnswer;
-        currentQuestion++;
-        askQuestion();
-    }
-
-      $("#chat-window").scrollTop($("#chat-window")[0].scrollHeight);
-  });
+        $("#chat-window").scrollTop($("#chat-window")[0].scrollHeight);
+    });
     // Initialiser la conversation
     appendMessage("Bot", "Comment puis-je vous aider aujourd'hui ?");
     $("#chat-form").data("field", "prompt");
 
-    //   // Ajouter un écouteur d'événement pour la première entrée utilisateur
-    //   $("#chat-form").one("submit", function (e) {
-    //     e.preventDefault();
-    //     askQuestion();
-    //   });
-    debugger;
-    // Ajouter un écouteur d'événement pour la première entrée utilisateur
     $("#chat-form").one("submit", function (e) {
         e.preventDefault();
         let userRequest = $("#user-input").val().trim();
@@ -143,5 +136,5 @@ $(document).ready(function () {
         appendMessage("Utilisateur", userRequest);
         $("#user-input").val("");
         askQuestion();
-  });
+    });
 });

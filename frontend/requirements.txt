@@ -1,7 +1,6 @@
+python-dotenv
 flask
 numpy
 pandas
-tensorflow
 joblib
-tf-keras
-transformers
+requests
