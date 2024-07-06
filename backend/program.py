@@ -1,11 +1,10 @@
 from datetime import datetime
-import config
 from flask import Flask, request, jsonify, abort
 from flask_migrate import Migrate
-import json
+from flask_cors import CORS
+import config
 from models import db, Prompts
 import src.funcs as helper_functions
-from flask_cors import CORS
 
 import ai_model.helpers.helpers as ai_helpers
 
@@ -110,4 +109,4 @@ def remove_chat(del_id):
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
-        app.run(debug=True, host="0.0.0.0", port=5005)
+        app.run(debug=config.DEBUG, host="0.0.0.0", port=5005)

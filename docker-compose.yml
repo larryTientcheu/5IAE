@@ -8,7 +8,7 @@ services:
     depends_on:
       - db_postgres
     environment:
-      - ENVIRONMENT=docker
+      - ENVIRONMENT=prod
     env_file:
       - /backend/.env.docker
     restart: always
@@ -22,7 +22,7 @@ services:
     depends_on:
       - backend_api
     environment:
-      - ENVIRONMENT=Render
+      - ENVIRONMENT=prod
 
   db_postgres:
     image: postgres:latest

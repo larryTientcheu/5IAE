@@ -1,20 +1,17 @@
+import os
 from flask import Flask, render_template, request, jsonify
 import json
 import numpy as np
-import os
 import joblib
-import helpers
 import requests
+from dotenv import load_dotenv
+import config
+import helpers
 
 app = Flask(__name__)
+app.config.from_object("config")
 
-if os.getenv("ENVIRONMENT") == "docker":
-    URL = "http://host.docker.internal:5005/"
-elif os.getenv("ENVIRONMENT") == "Render":
-    URL = os.getenv("RENDER_BACKEND_URL")
-else:
-    URL = "http://localhost:5005/"
-
+URL = config.URL
 
 @app.route("/")
 def index():
@@ -52,7 +49,7 @@ def save_flight_info():
 
         print(sent_to_back)
         # Call the backend api chat here
-        response = requests.post(f"{URL}chats", json=sent_to_back, timeout=120)
+        response = requests.post(f"{URL}chat", json=sent_to_back, timeout=120)
 
         if response.status_code != 200:
             return {"message": "Une erreur s'est produite"}
@@ -67,4 +64,4 @@ def save_flight_info():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0")
+    app.run(debug=config.DEBUG, host="0.0.0.0", port=5000)

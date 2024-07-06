@@ -87,6 +87,3 @@ def validate(data):
 
     return payload, {"valid": True, "error": ""}
 
-
-def format_user_query(data):
-    return
