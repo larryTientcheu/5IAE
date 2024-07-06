@@ -4,17 +4,17 @@ from pathlib import Path
 
 basedir = Path(__file__).parent
 
-if os.getenv("ENVIRONMENT") == "dev":
+SECRET_KEY = os.urandom(32)
+SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+if os.getenv("ENV") == "dev":
     load_dotenv(basedir / ".env", verbose=True)
-elif os.getenv("ENVIRONMENT") == "docker":
+    DEBUG = os.getenv("DEBUG")
+elif os.getenv("ENV") == "docker":
     load_dotenv(basedir / ".env.docker", verbose=True)
+    DEBUG = os.getenv("DEBUG")
 else:
     load_dotenv()
-
-# load_dotenv()
-
-SECRET_KEY = os.urandom(32)
-
+    DEBUG = False
 
 DATABASE_URI = os.getenv("DATABASE_URI")
-SQLALCHEMY_TRACK_MODIFICATIONS = False
