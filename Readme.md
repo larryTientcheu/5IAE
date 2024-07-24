@@ -1,18 +1,9 @@
 # Flight booking Chatbot
 
-This is a flight booking chatbot done by:
-
-* Tientcheu Ngaleu Larry Jordan
-* Kameni Kameni Olivier
-* Ej-Jaidi Aymane
-
 ## Project Structure
 
 ```bash
 .
-├── Comprehensive Documentation.docx
-├── PFE_23-24_5e.docx
-├── PFE_23-24_5e.pdf
 ├── Readme.md
 ├── backend
 │   ├── Dockerfile
@@ -62,14 +53,6 @@ This is a flight booking chatbot done by:
 ## HOW TO RUN
 
 ### With Docker
-
-#### From DockerHub
-
-1. Pull the image from Dockerhub using `docker pull ngaleuj/5IAE`
-
-2. Run the image using `docker run ngaleuj/5IAE`
-
-3. Access the chatbot using `http://localhost:5000`
 
 #### Build the docker image
 
